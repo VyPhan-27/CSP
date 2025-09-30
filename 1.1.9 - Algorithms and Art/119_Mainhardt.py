@@ -3,9 +3,15 @@ import turtle as trtl
 screen = trtl.Screen()
 screen.bgcolor("black") # Set the background color to black
 
+#input texts
+my_planets = trtl.textinput("planets", "Do you want to see the planets? y/n")
+if my_planets == "y":
+ 
+
+
 #list
-my_planets = ["Mercury", "Venus", "Earth", "Mars", "Jupter", "Saturn", "Uranus", "Neptune"] #planets list
-redo = "back?"
+ my_planets = ["Mercury", "Venus", "Earth", "Mars", "Jupter", "Saturn", "Uranus", "Neptune"] #planets list
+my_planets_colors = ["lightgrey", "darkorange", "royalblue", "crimson", "goldenrod", "khaki", "lightskyblue", "dodgerblue"]
 
 #user input
 
