@@ -7,7 +7,7 @@ screen.bgcolor("black")  # Set background color to black
 # Define custom star shape
 trtl.addshape("star", ((0, 3), (2, 0), (4, -1), (2, -2), (3, -4), (1, -3), (-1, -3), (-3, -4), (-2, -2), (-4, -1), (-2, 0)))
 
-# Draw a star (e.g., representing the sun)
+# Draw a star
 star = trtl.Turtle()
 star.pensize(4)
 star.shape("star")
@@ -28,6 +28,17 @@ my_planets_colors = ["lightgrey", "darkorange", "royalblue", "crimson", "goldenr
 
 # Plant radius
 planet_radii = [10, 15, 15, 15, 26, 24, 20, 20]
+
+# Draw the sun
+sun = trtl.Turtle()
+sun.shape("star")
+sun.fillcolor("yellow")
+sun.penup()
+sun.goto(50, -50)
+sun.pendown()
+sun.begin_fill()
+sun.circle(100)
+sun.end_fill()
 
 # Draw planets if user selects 'y'
 if other_planets.lower() == "y":
