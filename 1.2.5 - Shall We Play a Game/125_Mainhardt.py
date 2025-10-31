@@ -77,9 +77,7 @@ def ask_player():
 
     return color, shape
 
-# ========================================
 # TIMER (counts UP)
-# ========================================
 elapsed_time = 0
 timer_turtle = None
 timer_active = False
@@ -106,9 +104,7 @@ def stop_timer():
     global timer_active
     timer_active = False
 
-# ========================================
-# PLAYER MOVEMENT WITH ARROW KEYS
-# ========================================
+# PLAYER MOVEMENT WITH ARROW KEY
 player = None
 GRID_SIZE = 30  # Move in 30px steps
 
@@ -128,9 +124,7 @@ def move_right():
     if player.xcor() < 400:
         player.setx(player.xcor() + GRID_SIZE)
 
-# ========================================
 # START GAME ON SPACE
-# ========================================
 def start_game():
     title.clear()
     prompt.clear()
@@ -156,9 +150,7 @@ def start_game():
     screen.onkey(move_right, "Right")
     screen.listen()
 
-# ========================================
 # CAR MOVEMENT LOOP
-# ========================================
 def move_cars():
     for car in cars:
         if isinstance(car, trtl.Turtle):
@@ -167,10 +159,7 @@ def move_cars():
                 car.goto(-500, car.ycor())
     screen.update()
     screen.ontimer(move_cars, 50)
-
-# ========================================
 # START EVERYTHING
-# ========================================
 screen.listen()
 screen.onkey(start_game, "space")
 screen.tracer(0)
