@@ -39,6 +39,15 @@ for i in range(6):
     car_set.goto(450, car_lane[i])
     car_set.dx = rand.randint(8, 16)
     cars.append(car_set)
+# Spawn in Cars
+def spawn_title_cars():
+    global cars
+    cars = []
+    for i in range(6):
+        car = trtl.Turtle()
+        car.speed(0)
+        car.shape("car")
+        car.shapesize(10)
         car.right(270)
         car.color(default_cars_color[i])
         car.penup()

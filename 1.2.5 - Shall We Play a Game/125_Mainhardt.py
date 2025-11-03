@@ -1,5 +1,4 @@
 # --------------------------------------------------------------
-#  Street Crossing! – FULLY FIXED & COMPLETE
 #  Street Crossing! – Cars on Title Screen + Speed Change
 # --------------------------------------------------------------
 import turtle as trtl
@@ -23,7 +22,6 @@ prompt.write("Press SPACE to start", align='center', font=("Arial", 60, "normal"
 screen = trtl.Screen()
 screen.setup(width=850, height=740)
 screen.title("Street Crossing!")
-screen.bgpic("street.gif")          # <-- make sure street.gif is in the same folder
 screen.bgpic("street.gif")
 
 # ---------- 3. Car data ----------
@@ -125,15 +123,12 @@ def choose_difficulty():
         diff = screen.textinput("Difficulty",
                 "Choose: easy / medium / hard").strip().lower()
         if diff in ("easy", "e"):
-            speed_multiplier = 1.5
             speed_multiplier = 2.0
             break
         elif diff in ("medium", "m"):
-            speed_multiplier = 2.0
             speed_multiplier = 2.5
             break
         elif diff in ("hard", "h"):
-            speed_multiplier = 2.5
             speed_multiplier = 3.0
             break
         else:
@@ -145,8 +140,6 @@ def choose_difficulty():
         car.dx = base * speed_multiplier
     screen.update()
 
-# ---------- 8. Create cars ----------
-def spawn_cars():
 # ---------- 8. Create cars (for title screen) ----------
 def spawn_title_cars():
     global cars
@@ -162,11 +155,9 @@ def spawn_title_cars():
         car.goto(450, car_lane[i])
 
         base = rand.randint(8, 16)
-        car.dx = base * speed_multiplier
         car.dx = base * 1.0  # slow speed for title screen
         cars.append(car)
 
-    screen.update()          # SHOW CARS
     screen.update()
 
 # ---------- 9. Car movement ----------
@@ -175,7 +166,6 @@ def move_cars():
         car.setx(car.xcor() + car.dx)
         if car.xcor() > 500:
             car.goto(-500, car.ycor())
-    screen.update()          # UPDATE SCREEN
     screen.update()
     screen.ontimer(move_cars, 50)
 
@@ -235,7 +225,6 @@ def start_game():
     player_color, player_shape = ask_player()
     if player_color is None:
         return
-    choose_difficulty()
     
     choose_difficulty()  # Cars speed changes HERE!
 
@@ -246,10 +235,8 @@ def start_game():
     player.speed(0)
     player.goto(0, -300)
 
-    screen.update()          # SHOW PLAYER
     screen.update()
 
-    spawn_cars()
     start_timer()
     move_cars()
 
@@ -271,7 +258,6 @@ def start_game():
 # ---------- 13. Kick-off ----------
 screen.listen()
 screen.onkeypress(start_game, "space")
-screen.tracer(0)          # SMOOTH ANIMATION
 
 # **NEW: Spawn cars for title screen**
 spawn_title_cars()
