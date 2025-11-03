@@ -39,21 +39,29 @@ for i in range(6):
     car_set.goto(450, car_lane[i])
     car_set.dx = rand.randint(8, 16)
     cars.append(car_set)
+# Move the Cars
+def move_cars():
+    for car in cars:
+        if isinstance(car, trtl.Turtle):
+            car.setx(car.xcor() + car.dx)
+            if car.xcor() > 500:
+                car.goto(-500, car.ycor())
+    screen.ontimer(move_cars, 50)
 # TODO Choice of Customize Turtle 
 def ask_player():
     while True:
-       response = screen.textinput("Start", "Type YES to play:")
+       response = screen.textinput("Start", "Type yes to play or no:")
        if response is None:
            screen.bye()
            return None, None
        if response.strip().lower() in ["yes", "y", "ok"]:
            break
        elif response.strip().lower() in ["no", "n"]:
-           screen.textinput("Try Again", "You said NO. Let's try again!\nType YES to play.")
+           screen.textinput("Try Again", "You said no. Let's try again!\nType again to restart.")
        else:
-            screen.textinput("Invalid", "Please type YES or NO.")
+            screen.textinput("Invalid", "Please type yes or no.")
 
-    custom = screen.textinput("Customize", "Type 'custom' or leave blank:")
+    custom = screen.textinput("Customize", "Type 'custom' or default:")
     color = "lime"
     shape = "turtle"
     if custom and custom.lower() == "custom":
@@ -92,12 +100,57 @@ def update_timer():
 def stop_timer():
     global timer_active
     timer_active = False
+
+# Start game on space
+def start_game():
+    title.clear()
+    prompt.clear()
+    player_color, player_shape = ask_player()
+    if player_color is None:
+        return
+
+    global player
+    player = trtl.Turtle()
+    player.shape(player_shape)
+    player.color(player_color)
+    player.penup()
+    player.speed(0)
+    player.goto(0, -300)
+    
+    # begin timer
+    start_timer()
+    #Bind Keys 
+    screen.onkey(move_up, "Up")
+    screen.onkey(move_down, "Down")
+    screen.onkey(move_left, "Left")
+    screen.onkey(move_right, "Right")
+    screen.listen()
+# Create Bind Keys
+player = None
+GRID_SIZE = 30  # Move in 30px steps
+
+def move_up():
+    if player.ycor() < 320:
+        player.sety(player.ycor() + GRID_SIZE)
+
+def move_down():
+    if player.ycor() > -320:
+        player.sety(player.ycor() - GRID_SIZE)
+
+def move_left():
+    if player.xcor() > -400:
+        player.setx(player.xcor() - GRID_SIZE)
+
+def move_right():
+    if player.xcor() < 400:
+        player.setx(player.xcor() + GRID_SIZE)
+# Start the game
+screen.listen()
+screen.onkeypress(start_game,"space")
+move_cars()
+screen.tracer(1)
 # TODO Win or Lose Screen
-
 # TODO Players Scores and Difficulty level chosen
-
-
-
 
 wn = trtl.Screen()
 wn.mainloop()
