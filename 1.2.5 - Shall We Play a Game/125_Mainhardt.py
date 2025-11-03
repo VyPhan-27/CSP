@@ -1,5 +1,6 @@
 # --------------------------------------------------------------
 #  Street Crossing! – FULLY FIXED & COMPLETE
+#  Street Crossing! – Cars on Title Screen + Speed Change
 # --------------------------------------------------------------
 import turtle as trtl
 import random as rand
@@ -23,6 +24,7 @@ screen = trtl.Screen()
 screen.setup(width=850, height=740)
 screen.title("Street Crossing!")
 screen.bgpic("street.gif")          # <-- make sure street.gif is in the same folder
+screen.bgpic("street.gif")
 
 # ---------- 3. Car data ----------
 car_lane = [270, 220, 70, 10, -140, -190]
@@ -113,6 +115,7 @@ def ask_player():
             shape = shp.lower()
 
     return color, shape
+
 # ---------- 7. Difficulty ----------
 speed_multiplier = 1.0
 
@@ -123,18 +126,29 @@ def choose_difficulty():
                 "Choose: easy / medium / hard").strip().lower()
         if diff in ("easy", "e"):
             speed_multiplier = 1.5
+            speed_multiplier = 2.0
             break
         elif diff in ("medium", "m"):
             speed_multiplier = 2.0
+            speed_multiplier = 2.5
             break
         elif diff in ("hard", "h"):
             speed_multiplier = 2.5
+            speed_multiplier = 3.0
             break
         else:
             screen.textinput("Oops", "Please type easy, medium or hard.")
+    
+    # **NEW: UPDATE CAR SPEEDS when difficulty is chosen**
+    for car in cars:
+        base = rand.randint(8, 16)
+        car.dx = base * speed_multiplier
+    screen.update()
 
 # ---------- 8. Create cars ----------
 def spawn_cars():
+# ---------- 8. Create cars (for title screen) ----------
+def spawn_title_cars():
     global cars
     cars = []
     for i in range(6):
@@ -149,9 +163,11 @@ def spawn_cars():
 
         base = rand.randint(8, 16)
         car.dx = base * speed_multiplier
+        car.dx = base * 1.0  # slow speed for title screen
         cars.append(car)
 
     screen.update()          # SHOW CARS
+    screen.update()
 
 # ---------- 9. Car movement ----------
 def move_cars():
@@ -160,6 +176,7 @@ def move_cars():
         if car.xcor() > 500:
             car.goto(-500, car.ycor())
     screen.update()          # UPDATE SCREEN
+    screen.update()
     screen.ontimer(move_cars, 50)
 
 # ---------- 10. Collision detection ----------
@@ -219,6 +236,8 @@ def start_game():
     if player_color is None:
         return
     choose_difficulty()
+    
+    choose_difficulty()  # Cars speed changes HERE!
 
     player = trtl.Turtle()
     player.shape(player_shape)
@@ -228,6 +247,7 @@ def start_game():
     player.goto(0, -300)
 
     screen.update()          # SHOW PLAYER
+    screen.update()
 
     spawn_cars()
     start_timer()
@@ -252,4 +272,10 @@ def start_game():
 screen.listen()
 screen.onkeypress(start_game, "space")
 screen.tracer(0)          # SMOOTH ANIMATION
+
+# **NEW: Spawn cars for title screen**
+spawn_title_cars()
+move_cars()  # Start car movement immediately
+
+screen.tracer(0)
 screen.mainloop()

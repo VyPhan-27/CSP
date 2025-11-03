@@ -39,6 +39,17 @@ for i in range(6):
     car_set.goto(450, car_lane[i])
     car_set.dx = rand.randint(8, 16)
     cars.append(car_set)
+        car.right(270)
+        car.color(default_cars_color[i])
+        car.penup()
+        car.goto(450, car_lane[i])
+
+        base = rand.randint(8, 16)
+        car.dx = base * 1.0  # slow speed for title screen
+        cars.append(car)
+    
+    screen.update()
+
 # Move the Cars
 def move_cars():
     for car in cars:
@@ -50,28 +61,32 @@ def move_cars():
 # TODO Choice of Customize Turtle 
 def ask_player():
     while True:
-       response = screen.textinput("Start", "Type yes to play or no:")
-       if response is None:
-           screen.bye()
-           return None, None
-       if response.strip().lower() in ["yes", "y", "ok"]:
-           break
-       elif response.strip().lower() in ["no", "n"]:
-           screen.textinput("Try Again", "You said no. Let's try again!\nType again to restart.")
-       else:
+        response = screen.textinput("Start", "Type yes to play or no:")
+        if response is None:
+            screen.bye()
+            return None, None
+        if response.strip().lower() in ("yes","y","ok"):
+            break
+        elif response.strip().lower() in ("no","n"):
+            screen.textinput("Try Again",
+                "You said no. Let's try again!\nType again to restart.")
+        else:
             screen.textinput("Invalid", "Please type yes or no.")
 
-    custom = screen.textinput("Customize", "Type 'custom' or default:")
+    custom = screen.textinput("Customize", "Type 'custom' or default:").strip()
     color = "lime"
     shape = "turtle"
+
     if custom and custom.lower() == "custom":
-      col = screen.textinput("Color", "Enter a color (e.g. red, blue, lime):")
-    if col:
-      color = col.lower()
-    shp = screen.textinput("Shape","Enter shape (turtle, arrow, circle, square, triangle):")
-    valid = ["turtle", "arrow", "circle", "square", "triangle", "classic"]
-    if shp and shp.lower() in valid:
-      shape = shp.lower()
+        col = screen.textinput("Color",
+                "Enter a color (e.g. red, blue, lime):")
+        if col:
+            color = col.lower()
+        shp = screen.textinput("Shape",
+                "Enter shape (turtle, arrow, circle, square, triangle, classic):")
+        valid = ["turtle","arrow","circle","square","triangle","classic"]
+        if shp and shp.lower() in valid:
+            shape = shp.lower()
 
     return color, shape
 # TODO Create an timer
@@ -93,7 +108,7 @@ def update_timer():
     global elapsed_time
     if timer_active:
         timer_turtle.clear()
-        timer_turtle.write(f"Time: {elapsed_time}", align="center", font=("Arial", 24, "bold"))
+        timer_turtle.write(f"Time: {elapsed_time}", align="right", font=("Arial", 24, "bold"))
         elapsed_time += 1
         screen.ontimer(update_timer, 1000)
 
@@ -113,6 +128,8 @@ def start_game():
     player = trtl.Turtle()
     player.shape(player_shape)
     player.color(player_color)
+    player.speed(100)
+    player.left(90)
     player.penup()
     player.speed(0)
     player.goto(0, -300)
@@ -127,7 +144,7 @@ def start_game():
     screen.listen()
 # Create Bind Keys
 player = None
-GRID_SIZE = 30  # Move in 30px steps
+GRID_SIZE = 30
 
 def move_up():
     if player.ycor() < 320:
@@ -148,8 +165,26 @@ def move_right():
 screen.listen()
 screen.onkeypress(start_game,"space")
 move_cars()
-screen.tracer(1)
+screen.tracer(0)
 # TODO Win or Lose Screen
+def win_game():
+    stop_timer()
+    screen.onkey(None, "Up"); screen.onkey(None, "Down")
+    screen.onkey(None, "Left"); screen.onkey(None, "Right")
+    player.hideturtle()
+
+    win = trtl.Turtle()
+    win.hideturtle()
+    win.goto(0, 0)
+    win.write(f"You WIN!\nTime: {elapsed_time}s",
+              align="center", font=("Arial", 48, "bold"))
+    screen.update()
+    screen.ontimer(screen.bye, 4000)
+def lose_game():
+    stop_timer()
+    screen.onkey(None, "Up"); screen.onkey(None, "Down")
+
+
 # TODO Players Scores and Difficulty level chosen
 
 wn = trtl.Screen()
