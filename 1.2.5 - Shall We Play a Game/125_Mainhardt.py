@@ -231,6 +231,7 @@ def start_game():
     player = trtl.Turtle()
     player.shape(player_shape)
     player.color(player_color)
+    player.left(90)
     player.penup()
     player.speed(0)
     player.goto(0, -300)
