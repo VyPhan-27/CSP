@@ -66,7 +66,6 @@ def update_timer():
     global elapsed_time
     if timer_active:
         timer_turtle.clear()
-        timer_turtle.write(f"Time: {elapsed_time}", align="right", font=("Arial", 24, "bold"))
         timer_turtle.write(f"Time: {elapsed_time}s", align="center",
                            font=("Arial", 24, "bold"))
         elapsed_time += 1
@@ -127,7 +126,7 @@ def choose_difficulty():
             break
         else:
             screen.textinput("Oops", "Please type easy, medium or hard.")
-    # Update Cars speed
+    # Changes the Cars Speed 
     for car in cars:
         base = rand.randint(8, 16)
         car.dx = base * speed_multiplier
@@ -149,19 +148,17 @@ def spawn_title_cars():
 
         base = rand.randint(8, 16)
         car.dx = base * 1.0  # slow speed for title screen
-        car.dx = rand.randint(8, 16) * 1.0
         cars.append(car)
+
     screen.update()
 
 # Move the Cars
 def move_cars():
     for car in cars:
-        if isinstance(car, trtl.Turtle):
-            car.setx(car.xcor() + car.dx)
-            if car.xcor() > 500:
-                car.goto(-500, car.ycor())
-    screen.ontimer(move_cars, 50)
-    screen.update()                
+        car.setx(car.xcor() + car.dx)
+        if car.xcor() > 500:
+            car.goto(-500, car.ycor())
+    screen.update()
     screen.ontimer(move_cars, 50)
 
 # Detecting Collision 
@@ -173,9 +170,6 @@ def check_collision():
         if abs(px - car.xcor()) < 55 and abs(py - car.ycor()) < 55:
             lose_game()
             return
-def check_win():
-    if player and player.ycor() >= 250:
-        win_game()
 
 # TODO Win or Lose Screen
 def win_game():
@@ -186,11 +180,13 @@ def win_game():
 
     win = trtl.Turtle()
     win.hideturtle()
+    win.penup()
     win.goto(0, 0)
     win.write(f"You WIN!\nTime: {elapsed_time}s",
               align="center", font=("Arial", 48, "bold"))
     screen.update()
     screen.ontimer(screen.bye, 4000)
+
 def lose_game():
     stop_timer()
     screen.onkey(None, "Up"); screen.onkey(None, "Down")
@@ -199,6 +195,7 @@ def lose_game():
 
     lose = trtl.Turtle()
     lose.hideturtle()
+    lose.penup()
     lose.goto(0, 0)
     lose.pencolor("grey")
     lose.write("GAME OVER\nHit by a car!",
@@ -206,6 +203,11 @@ def lose_game():
     screen.update()
     screen.ontimer(screen.bye, 3000)
 
+def check_win():
+    if player and player.ycor() >= 250:
+        win_game()
+
+# Beginning the Games
 def start_game():
     global player
 
