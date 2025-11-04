@@ -24,21 +24,8 @@ car_lane = [270, 220, 70, 10, -140, -190]
 # Custom Turtle
 trtl.register_shape("car", ((-5,1),(-2,1),(-1,3),(3,3),(4,2),(4,1),(7,1),(7,-2),(4,-2),(4,-3),(3,-3),(3,-2),(-1,-2),(-1,-3),(-2,-3),(-3,-2),(-5,-2)))
 # Create an list
-cars = ["cars1","cars2","cars3","cars4","cars5","cars6"]
 default_cars_color = ["red","blue","green","black","grey","white"]
-# Posistion Cars correctly
-for i in range(6):
-    car_set = trtl.Turtle()
-    car_set.speed(100)
-    car_set.shape("car")
-    car_set.shapesize(10)
-    car_set.right(270)
-    car_set.color(default_cars_color[i])
-    car_set.penup()
-    car_set.speed(0)
-    car_set.goto(450, car_lane[i])
-    car_set.dx = rand.randint(8, 16)
-    cars.append(car_set)
+cars = []
 # Spawn in Cars
 def spawn_title_cars():
     global cars
@@ -55,8 +42,8 @@ def spawn_title_cars():
 
         base = rand.randint(8, 16)
         car.dx = base * 1.0  # slow speed for title screen
+        car.dx = rand.randint(8, 16) * 1.0
         cars.append(car)
-    
     screen.update()
 
 # Move the Cars
@@ -67,6 +54,9 @@ def move_cars():
             if car.xcor() > 500:
                 car.goto(-500, car.ycor())
     screen.ontimer(move_cars, 50)
+    screen.update()                
+    screen.ontimer(move_cars, 50)  
+
 # TODO Choice of Customize Turtle 
 def ask_player():
     while True:
@@ -98,6 +88,7 @@ def ask_player():
             shape = shp.lower()
 
     return color, shape
+
 # TODO Create an timer
 elapsed_time = 0
 timer_turtle = None
@@ -118,6 +109,8 @@ def update_timer():
     if timer_active:
         timer_turtle.clear()
         timer_turtle.write(f"Time: {elapsed_time}", align="right", font=("Arial", 24, "bold"))
+        timer_turtle.write(f"Time: {elapsed_time}s", align="center",
+                           font=("Arial", 24, "bold"))
         elapsed_time += 1
         screen.ontimer(update_timer, 1000)
 
@@ -127,11 +120,16 @@ def stop_timer():
 
 # Start game on space
 def start_game():
+    global player
+
     title.clear()
     prompt.clear()
+
     player_color, player_shape = ask_player()
     if player_color is None:
         return
+    
+    choose_difficulty()
 
     global player
     player = trtl.Turtle()
@@ -144,13 +142,38 @@ def start_game():
     player.goto(0, -300)
     
     # begin timer
+
+    screen.update() # To Refresh any Buggy Problems
+
+    # Begin timer and move Cars
     start_timer()
     #Bind Keys 
+    move_cars()
+
+    # Bind Keys 
     screen.onkey(move_up, "Up")
     screen.onkey(move_down, "Down")
     screen.onkey(move_left, "Left")
     screen.onkey(move_right, "Right")
     screen.listen()
+
+    # Collision loop
+    def collision_loop():
+        if timer_active:
+            check_collision()
+            screen.update()
+            screen.ontimer(collision_loop, 50)
+    collision_loop()
+    # Collision Detecting
+    def check_collision():
+        if not player or not timer_active:
+            return
+        px, py = player.xcor(), player.ycor()
+        for car in cars:
+            if abs(px - car.xcor()) < 55 and abs(py - car.ycor()) < 55:
+                lose_game()
+                return
+        
 # Create Bind Keys
 player = None
 GRID_SIZE = 30
@@ -175,6 +198,7 @@ screen.listen()
 screen.onkeypress(start_game,"space")
 move_cars()
 screen.tracer(0)
+
 # TODO Win or Lose Screen
 def win_game():
     stop_timer()
@@ -192,9 +216,52 @@ def win_game():
 def lose_game():
     stop_timer()
     screen.onkey(None, "Up"); screen.onkey(None, "Down")
+    screen.onkey(None, "Left"); screen.onkey(None, "Right")
+    player.hideturtle()
 
+    lose = trtl.Turtle()
+    lose.hideturtle()
+    lose.goto(0, 0)
+    lose.pencolor("grey")
+    lose.write("GAME OVER\nHit by a car!",
+               align="center", font=("Arial", 48, "bold"))
+    screen.update()
+    screen.ontimer(screen.bye, 3000)
 
+def check_win():
+    if player and player.ycor() >= 250:
+        win_game()
 # TODO Players Scores and Difficulty level chosen
+speed_multiplier = 1.0
 
-wn = trtl.Screen()
-wn.mainloop()
+def choose_difficulty():
+    global speed_multiplier
+    while True:
+        diff = screen.textinput("Difficulty",
+                "Choose: easy / medium / hard").strip().lower()
+        if diff in ("easy", "e"):
+            speed_multiplier = 2.0
+            break
+        elif diff in ("medium", "m"):
+            speed_multiplier = 2.5
+            break
+        elif diff in ("hard", "h"):
+            speed_multiplier = 3.0
+            break
+        else:
+            screen.textinput("Oops", "Please type easy, medium or hard.")
+# Update Cars speed
+for car in cars:
+    base = rand.randint(8, 16)
+    car.dx = base * speed_multiplier
+screen.update()
+
+# Applying the defining funcation 
+screen.listen()
+screen.onkeypress(start_game, "space")
+# Spawn in the Cars
+spawn_title_cars()
+move_cars()
+
+screen.tracer(0)
+screen.mainloop()
