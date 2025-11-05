@@ -14,6 +14,13 @@ prompt.penup()
 prompt.goto(0, -180)
 prompt.color("grey")
 prompt.write("Press SPACE to start", align='center',  font=("Arial", 60, "normal"))
+# Where to Press
+press = trtl.Turtle()
+press.hideturtle()
+press.penup()
+press.goto(0, -300)
+press.color("red")
+press.write("Keys to move your Turtle!", align='center', font=("Arial", 40, "normal"))
 # Create an street background
 screen = trtl.Screen()
 screen.setup(width=850, height=740)
