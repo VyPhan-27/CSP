@@ -2,25 +2,21 @@ import turtle as trtl
 import random as rand
 
 # TODO create an Title Screen
-title = trtl.Turtle()
-title.pensize(5)
-title.penup()
-title.goto(0,-110)
-title.write("Street Crossing!", align='center',  font=("Arial", 60, "normal"))
-# Beginning the game
+title = trtl.Turtle(); title.pensize(5)
 prompt = trtl.Turtle()
-prompt.hideturtle()
-prompt.penup()
-prompt.goto(0, -180)
-prompt.color("grey")
-prompt.write("Press SPACE to start", align='center',  font=("Arial", 60, "normal"))
-# Where to Press
 press = trtl.Turtle()
-press.hideturtle()
-press.penup()
-press.goto(0, -300)
-press.color("red")
-press.write("Keys to move your Turtle!", align='center', font=("Arial", 40, "normal"))
+# Custom Funcation
+def display_message(turtle_obj, message, y_position, font_size=40, color="black"):
+    turtle_obj.clear()
+    turtle_obj.hideturtle()
+    turtle_obj.penup()
+    turtle_obj.goto(0, y_position)
+    turtle_obj.color(color)
+    turtle_obj.write(message, align='center', font=("Arial", font_size, "normal"))
+# Use funcation
+display_message(title,  "Street Crossing!",      -110, 60)
+display_message(prompt, "Press SPACE to start",  -180, 60, "grey")
+display_message(press,  "Keys to move your Turtle!", -300, 40, "red")
 # Create an street background
 screen = trtl.Screen()
 screen.setup(width=850, height=740)
