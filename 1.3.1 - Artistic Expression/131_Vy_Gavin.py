@@ -20,11 +20,8 @@ title.write("Press SPACE to start the game", align='center', font=("Arial", 50, 
 
 # Boat
 boat = trtl.Turtle()
-try:
-    screen.addshape("boat.gif")
-    boat.shape("boat.gif")
-except:
-    boat.shape("turtle")
+screen.addshape("boat.gif")
+boat.shape("boat.gif")
 boat.penup()
 boat.goto(-400, -200)
 
@@ -35,6 +32,8 @@ try:
     island.shape("island.gif")
 except:
     island.shape("square")
+screen.addshape("island.gif")
+island.shape("island.gif")
 island.penup()
 island.goto(400, -200)
 island.shapesize(4, 6)
@@ -202,6 +201,11 @@ def win_screen():
     win.goto(0, -200)
     win.write("Boat reached the island!", align='center',
               font=("Arial", 28, "italic"))
+    win.pencolor("red")
+    win.goto(400, -60)
+    win.write("You did an Amazing Job", align="right", font=("Arial", 24, "bold"))
+    win.goto(400, -80)
+    win.write("Great Job! and also know that we here for you!", align="right", font=("Arial", 24, "bold"))
 
 # Start game
 def start_game():
