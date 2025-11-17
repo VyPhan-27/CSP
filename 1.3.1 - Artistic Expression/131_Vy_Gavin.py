@@ -11,6 +11,13 @@ screen.tracer(0)
 title = trtl.Turtle()
 title.hideturtle()
 title.penup()
+title.goto(0, 100)
+title.pencolor("gold")
+title.write("You are much stronger than you think.", align='center', font=("Arial", 50, "normal"))
+title.goto(0, 50)
+title.write("And know that hard times often lead to the", align='center', font=("Arial", 50, "normal"))
+title.goto(0, 0)
+title.write(" greatest moments of your life Keep going.", align='center', font=("Arial", 50, "normal"))
 title.goto(0, -110)
 title.pencolor("grey")
 title.write("Hello!, Welcome to our Game", align='center', font=("Arial", 60, "normal"))
@@ -205,7 +212,7 @@ def win_screen():
     win.goto(400, -60)
     win.write("You did an Amazing Job", align="right", font=("Arial", 24, "bold"))
     win.goto(400, -80)
-    win.write("Great Job! and also know that we here for you!", align="right", font=("Arial", 24, "bold"))
+    win.write("Always know that you have people that are here for you!", align="right", font=("Arial", 24, "bold"))
 
 # Start game
 def start_game():
