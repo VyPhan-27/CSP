@@ -7,75 +7,84 @@ import tkinter.scrolledtext as tksc
 from tkinter import filedialog
 from tkinter.filedialog import asksaveasfilename
 
-    # Save function.
+# Save function
 def mSave():
     filename = asksaveasfilename(defaultextension='.txt',
-    filetypes=(('Text files', '*.txt'),
-            ('Python files', '*.py *.pyw'),
-            ('All files', '*.*')))
+                                 filetypes=(('Text files', '*.txt'),
+                                            ('Python files', '*.py *.pyw'),
+                                            ('All files', '*.*')))
     if filename is None:
         return
-    file = open(filename, mode='w')
-    text_to_save = command_textbox.get("1.0", tk.END)
-    file.write(text_to_save)
-    file.close()
+    with open(filename, mode='w') as file:
+        text_to_save = command_textbox.get("1.0", tk.END)
+        file.write(text_to_save)
 
+# Execute command function
 def do_command(command):
-    global command_textbox, url_entry
-
-    # If url_entry is blank, use localhost IPv6 address
-    url_val = url_entry.get()
+    url_val = url_entry.get().strip()
     if len(url_val) == 0:
-        # url_val = "127.0.0.1"
-        url_val = "::1"
+        url_val = "::1"  # Default to localhost IPv6
 
     command_textbox.delete(1.0, tk.END)
-    command_textbox.insert(tk.END, command + " working....\n")
+    command_textbox.insert(tk.END, f"{command} {url_val} working...\n")
     command_textbox.update()
 
-    p = subprocess.Popen(command + ' ' + url_val,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        shell=True)
+    p = subprocess.Popen(f"{command} {url_val}",
+                         stdout=subprocess.PIPE,
+                         stderr=subprocess.PIPE,
+                         shell=True)
 
     cmd_results, cmd_errors = p.communicate()
     command_textbox.insert(tk.END, cmd_results.decode())
     command_textbox.insert(tk.END, cmd_errors.decode())
+    command_textbox.see(tk.END)
 
+# Main window
 root = tk.Tk()
+root.title("Network Tools")
+root.geometry("900x600")
 
-# Top frame with Ping button
-frame = tk.Frame(root)
-frame.pack()
+# === Button frame with grid layout ===
+button_frame = tk.Frame(root)
+button_frame.pack(pady=20)
 
-ping_btn = tk.Button(frame, text="Ping URL",
-command=lambda: do_command("ping -c 10"))
-ping_btn.pack()
+ping_image = tk.PhotoImage(file="ping.gif")
+ping_image = ping_image.subsample(5, 5)
 
-# URL entry frame
-frame_URL = tk.Frame(root, pady=10, bg="green")  # change frame color
-frame_URL.pack()
+nslookup_image = tk.PhotoImage(file="nslookup.gif")
+nslookup_image = nslookup_image.subsample(5, 5)
 
-# decorative label
-url_label = tk.Label(frame_URL, text="Enter a URL of interest: ",
-    compound="center",
-    font=("Comic Sans", 14),
-    bd=0,
-    relief=tk.FLAT,
-    cursor="heart",
-    fg="red",
-    bg="darkgreen")
-url_label.pack(side=tk.LEFT)
+traceroute_image = tk.PhotoImage(file="traceroute.gif")
+traceroute_image = traceroute_image.subsample(5, 5)
 
-url_entry = tk.Entry(frame_URL, font=("comic sans", 14))  # change font
-url_entry.pack(side=tk.LEFT)
+save_image = tk.PhotoImage(file="saveas.gif")
+save_image = save_image.subsample(5, 5)
 
-# Output frame
-frame = tk.Frame(root, bg="black")  # change frame color
-frame.pack()
+tk.Button(button_frame, image=ping_image, compound="top", text="Ping",
+          command=lambda: do_command("ping -c 10")).grid(row=0, column=0, padx=20, pady=10)
 
-# Adds an output box to GUI.
-command_textbox = tksc.ScrolledText(frame, height=10, width=100)
-command_textbox.pack()
+tk.Button(button_frame, image=nslookup_image, compound="top", text="NSLookup",
+          command=lambda: do_command("nslookup")).grid(row=0, column=1, padx=20, pady=10)
+
+tk.Button(button_frame, image=traceroute_image, compound="top", text="Traceroute",
+          command=lambda: do_command("traceroute")).grid(row=0, column=2, padx=20, pady=10)
+
+tk.Button(button_frame, image=save_image, compound="top", text="Save",
+          command=mSave).grid(row=0, column=3, padx=20, pady=10)
+
+# === URL entry frame ===
+url_frame = tk.Frame(root, pady=10)
+url_frame.pack()
+
+tk.Label(url_frame, text="Enter a URL or IP:", font=("Arial", 12)).pack(side=tk.LEFT, padx=10)
+url_entry = tk.Entry(url_frame, font=("Arial", 12), width=60)
+url_entry.pack(side=tk.LEFT, padx=10)
+
+# === Output scrolled text ===
+output_frame = tk.Frame(root)
+output_frame.pack(pady=20, padx=20, fill=tk.BOTH, expand=True)
+
+command_textbox = tksc.ScrolledText(output_frame, height=20, width=110, font=("Courier", 10))
+command_textbox.pack(fill=tk.BOTH, expand=True)
 
 root.mainloop()
