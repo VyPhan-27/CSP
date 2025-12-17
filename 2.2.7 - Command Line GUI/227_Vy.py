@@ -55,10 +55,10 @@ def do_command(command):
 # Main window - Grinch green background
 root = tk.Tk()
 root.title("Grinch Network Tools")
-root.geometry("900x600")
-root.configure(bg="#228B22")  # Grinch green
+root.geometry("1000x600")
+root.configure(bg="green")  # Grinch green
 
-button_frame = tk.Frame(root, bg="#228B22")  # Green frame
+button_frame = tk.Frame(root, bg="green")  # Green frame
 button_frame.pack(pady=20)
 
 ping_image = tk.PhotoImage(file="ping.gif")
@@ -70,21 +70,27 @@ nslookup_image = nslookup_image.subsample(5, 5)
 traceroute_image = tk.PhotoImage(file="traceroute.gif")
 traceroute_image = traceroute_image.subsample(5, 5)
 
+dig_image = tk.PhotoImage(file="dig.gif")
+dig_image = dig_image.subsample(5, 5)
+
 save_image = tk.PhotoImage(file="saveas.gif")
 save_image = save_image.subsample(5, 5)
 
 # Buttons with black text on green background
 tk.Button(button_frame, image=ping_image, compound="top", text="Ping", bg="green", fg="black",
-          command=lambda: do_command("ping -c 10")).grid(row=0, column=0, padx=20, pady=10)
+          command=lambda: do_command("ping -c 10")).grid(row=0, column=0, padx=5, pady=10)
 
 tk.Button(button_frame, image=nslookup_image, compound="top", text="NSLookup", bg="green", fg="black",
-          command=lambda: do_command("nslookup")).grid(row=0, column=1, padx=20, pady=10)
+          command=lambda: do_command("nslookup")).grid(row=0, column=1, padx=5, pady=10)
 
 tk.Button(button_frame, image=traceroute_image, compound="top", text="Traceroute", bg="green", fg="black",
-          command=lambda: do_command("traceroute")).grid(row=0, column=2, padx=20, pady=10)
+          command=lambda: do_command("traceroute")).grid(row=0, column=2, padx=5, pady=10)
+
+tk.Button(button_frame, image=dig_image, compound="top", text="Dig", bg="green", fg="black",
+          command=lambda: do_command("dig")).grid(row=0, column=3, padx=5, pady=10)
 
 tk.Button(button_frame, image=save_image, compound="top", text="Save", bg="green", fg="black",
-          command=mSave).grid(row=0, column=3, padx=20, pady=10)
+          command=mSave).grid(row=0, column=4, padx=5, pady=10)
 
 # URL entry frame - green background
 url_frame = tk.Frame(root, pady=10, bg="green")
