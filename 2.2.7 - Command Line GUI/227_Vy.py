@@ -42,7 +42,7 @@ def do_command(command):
         error = result.stderr
     except subprocess.TimeoutExpired:
         output = ""
-        error = "Command took to long"
+        error = "Command timed out)"
     except Exception as e:
         output = ""
         error = f"Error: {str(e)}"
@@ -52,11 +52,13 @@ def do_command(command):
         command_textbox.insert(tk.END, error)
     command_textbox.see(tk.END)
 
+# Main window - Grinch green background
 root = tk.Tk()
-root.title("Network Tools")
+root.title("Grinch Network Tools")
 root.geometry("900x600")
+root.configure(bg="#228B22")  # Grinch green
 
-button_frame = tk.Frame(root)
+button_frame = tk.Frame(root, bg="#228B22")  # Green frame
 button_frame.pack(pady=20)
 
 ping_image = tk.PhotoImage(file="ping.gif")
@@ -71,29 +73,36 @@ traceroute_image = traceroute_image.subsample(5, 5)
 save_image = tk.PhotoImage(file="saveas.gif")
 save_image = save_image.subsample(5, 5)
 
-tk.Button(button_frame, image=ping_image, compound="top", text="Ping",
-command=lambda: do_command("ping -c 10")).grid(row=0, column=0, padx=20, pady=10)
+# Buttons with black text on green background
+tk.Button(button_frame, image=ping_image, compound="top", text="Ping", bg="green", fg="black",
+          command=lambda: do_command("ping -c 10")).grid(row=0, column=0, padx=20, pady=10)
 
-tk.Button(button_frame, image=nslookup_image, compound="top", text="NSLookup",
-command=lambda: do_command("nslookup")).grid(row=0, column=1, padx=20, pady=10)
+tk.Button(button_frame, image=nslookup_image, compound="top", text="NSLookup", bg="green", fg="black",
+          command=lambda: do_command("nslookup")).grid(row=0, column=1, padx=20, pady=10)
 
-tk.Button(button_frame, image=traceroute_image, compound="top", text="Traceroute",
-command=lambda: do_command("traceroute")).grid(row=0, column=2, padx=20, pady=10)
+tk.Button(button_frame, image=traceroute_image, compound="top", text="Traceroute", bg="green", fg="black",
+          command=lambda: do_command("traceroute")).grid(row=0, column=2, padx=20, pady=10)
 
-tk.Button(button_frame, image=save_image, compound="top", text="Save",
-command=mSave).grid(row=0, column=3, padx=20, pady=10)
+tk.Button(button_frame, image=save_image, compound="top", text="Save", bg="green", fg="black",
+          command=mSave).grid(row=0, column=3, padx=20, pady=10)
 
-url_frame = tk.Frame(root, pady=10)
+# URL entry frame - green background
+url_frame = tk.Frame(root, pady=10, bg="green")
 url_frame.pack()
 
-tk.Label(url_frame, text="Enter a URL or IP:", font=("Arial", 12)).pack(side=tk.LEFT, padx=10)
-url_entry = tk.Entry(url_frame, font=("Arial", 12), width=60)
+tk.Label(url_frame, text="Enter a URL or IP:", font=("Arial", 12), bg="green", fg="white").pack(side=tk.LEFT, padx=10)
+
+# RED input field (Grinch heart!)
+url_entry = tk.Entry(url_frame, font=("Arial", 12), width=60, bg="red", fg="white", insertbackground="white")
 url_entry.pack(side=tk.LEFT, padx=10)
 
-output_frame = tk.Frame(root)
+# Output frame - green background
+output_frame = tk.Frame(root, bg="green")
 output_frame.pack(pady=20, padx=20, fill=tk.BOTH, expand=True)
 
-command_textbox = tksc.ScrolledText(output_frame, height=20, width=110, font=("Courier", 10))
+# Scrolled text - green with white text
+command_textbox = tksc.ScrolledText(output_frame, height=20, width=110, font=("Courier", 10),
+                                   bg="red", fg="white", insertbackground="white")
 command_textbox.pack(fill=tk.BOTH, expand=True)
 
 root.mainloop()
