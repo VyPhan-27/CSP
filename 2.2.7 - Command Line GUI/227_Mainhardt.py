@@ -1,6 +1,5 @@
 # p227_network_tools_with_images.py
 # Network Tools GUI with Ping, NSlookup, Traceroute, and Save buttons
-# Images added to each button - place your image files in the same folder
 
 import subprocess
 import tkinter as tk
